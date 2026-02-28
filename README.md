@@ -1,45 +1,53 @@
-# agentic-wordsearch-solver
-Agentic AI WordSearch Solver built using Langflow and Groq with modular multi-agent architecture.
 User–System Interaction Document
-Overview
+1. Overview
 
 This document describes how users interact with the Agentic AI WordSearch Solver system. It defines expected behavior, happy paths, and edge cases before implementation.
 
-The system accepts:
+1.1 The system accepts:
 
 Image URL OR Base64 image of a word search puzzle
 
 List of target words
 
-The system returns:
+1.2 The system returns:
 
 Word coordinates
 
 Highlighted HTML visualization
 
-User Personas
-Persona 1: AI/ML Student (Primary User)
+2. User Personas
+2.1 Persona 1: AI/ML Student (Primary User)
 
 Background: Computer Engineering / AI student
+
 Experience: Familiar with Langflow and LLMs
+
 Goal: Solve word search puzzles programmatically
+
 Access Level: Can provide image URLs or Base64 data
-Persona 2: Puzzle Enthusiast (Secondary User)
+
+2.2 Persona 2: Puzzle Enthusiast (Secondary User)
 
 Background: Non-technical
+
 Experience: Basic web interface usage
+
 Goal: Upload puzzle image and get highlighted solution
+
 Access Level: Only image upload and word list input
 
-Persona 3: Developer / Maintainer
+2.3 Persona 3: Developer / Maintainer
 
 Background: AI Engineer
-Experience: Langflow, Groq API
+
+Experience: Langflow and Groq API
+
 Goal: Extend or debug system
+
 Access Level: Full system modification
 
-Happy Path Workflows
-Happy Path 1 – Image via URL
+3. Happy Path Workflows
+3.1 Happy Path 1 – Image via URL
 Scenario
 
 User provides a public image URL and word list.
@@ -53,8 +61,7 @@ Image URL
 
 Words: thor, hulk, hawkeye, black widow
 
-System Execution Flow
-
+3.2 System Execution Flow
 Thinking Step 1
 
 Validate URL format
@@ -104,7 +111,6 @@ Generate structured output:
   "positions": [[0,0],[0,1],[0,2],[0,3]],
   "direction": "horizontal"
 }
-
 Action 5
 
 Generate HTML table
@@ -123,7 +129,7 @@ Highlighted HTML
 
 JSON with word positions
 
-Happy Path 2 – Base64 Image Input
+3.3 Happy Path 2 – Base64 Image Input
 
 User:
 
@@ -144,18 +150,18 @@ Generates HTML
 Returns result
 
 Agent Specification Document
-System Overview
+1. System Overview
 
 The WordSearch Solver follows a multi-agent architecture where each agent has a clear responsibility. Agents communicate sequentially. No agent performs unrelated responsibilities.
 
 Each agent has a single responsibility.
 
-Image Processing Agent
-Role
+2. Image Processing Agent
+2.1 Role
 
 Convert image input into processable format.
 
-Responsibilities
+2.2 Responsibilities
 
 Fetch image from URL
 
@@ -165,7 +171,7 @@ Convert image to standardized format
 
 Return image bytes
 
-Capabilities
+2.3 Capabilities
 
 Can read image
 
@@ -173,12 +179,12 @@ Cannot perform search
 
 Cannot generate HTML
 
-Grid Extraction Agent
-Role
+3. Grid Extraction Agent
+3.1 Role
 
 Extract and validate 2D letter grid.
 
-Responsibilities
+3.2 Responsibilities
 
 Convert image to text grid
 
@@ -188,7 +194,7 @@ Validate dimensions
 
 Ensure characters only
 
-Capabilities
+3.3 Capabilities
 
 Returns 2D list
 
@@ -196,12 +202,12 @@ Cannot modify word list
 
 Cannot generate HTML
 
-WordSearch Engine Agent
-Role
+4. WordSearch Engine Agent
+4.1 Role
 
 Perform precise directional scanning.
 
-Responsibilities
+4.2 Responsibilities
 
 Accept grid and word list
 
@@ -211,7 +217,7 @@ Return coordinates
 
 Identify direction
 
-Capabilities
+4.3 Capabilities
 
 Deterministic logic
 
@@ -221,12 +227,12 @@ Cannot fetch images
 
 Cannot generate HTML
 
-HTML Generator Agent
-Role
+5. HTML Generator Agent
+5.1 Role
 
 Convert grid and coordinates into styled HTML output.
 
-Responsibilities
+5.2 Responsibilities
 
 Create HTML table
 
@@ -236,7 +242,7 @@ Highlight solved letters
 
 Generate CSS
 
-Capabilities
+5.3 Capabilities
 
 HTML generation
 
