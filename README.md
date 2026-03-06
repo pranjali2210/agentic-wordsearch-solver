@@ -1,4 +1,4 @@
-User–System Interaction Document
+User–System Interaction Document:
 1. Overview
 
 This document describes how users interact with the Agentic AI WordSearch Solver system.
@@ -27,7 +27,7 @@ Highlighted HTML visualization of the solved puzzle
 
 Structured JSON output
 
-2. User Personas
+2. User Personas:
 2.1 Persona 1 – AI/ML Student (Primary User)
 
 Background: Computer Engineering / AI student
@@ -49,7 +49,7 @@ Experience: Langflow and Groq API
 Goal: Extend, debug, or optimize the system
 Access Level: Full system modification
 
-3. Happy Path Workflows
+3. Happy Path Workflows:
 3.1 Happy Path 1 – Image via URL
 Scenario
 
@@ -65,7 +65,7 @@ Image URL
 
 Words: thor, hulk, hawkeye, black widow
 
-3.2 System Execution Flow
+3.2 System Execution Flow:
 Thinking Step 1 – Input Validation
 
 Validate URL format
@@ -158,7 +158,7 @@ Generate HTML visualization
 Return solution
 
 Agent Specification Document
-1. System Overview
+1. System Overview:
 
 The WordSearch Solver follows a multi-agent architecture.
 
@@ -170,12 +170,12 @@ Agents communicate sequentially
 
 No agent performs unrelated tasks
 
-2. Image Processing Agent
-2.1 Role
+2. Image Processing Agent:
+2.1 Role:
 
 Convert image input into a processable format.
 
-2.2 Responsibilities
+2.2 Responsibilities:
 
 Fetch image from URL
 
@@ -185,18 +185,18 @@ Convert image into standardized format
 
 Return image bytes
 
-2.3 Capabilities
+2.3 Capabilities:
 
-✔ Can read images
-✘ Cannot perform word search
-✘ Cannot generate HTML
+Can read images
+Cannot perform word search
+Cannot generate HTML
 
-3. Grid Extraction Agent
-3.1 Role
+3. Grid Extraction Agent:
+3.1 Role:
 
 Extract and validate the 2D letter grid.
 
-3.2 Responsibilities
+3.2 Responsibilities:
 
 Convert image to text grid
 
@@ -206,18 +206,18 @@ Validate grid dimensions
 
 Ensure characters only
 
-3.3 Capabilities
+3.3 Capabilities:
 
-✔ Returns validated 2D list
-✘ Cannot modify word list
-✘ Cannot generate HTML
+Returns validated 2D list
+Cannot modify word list
+Cannot generate HTML
 
-4. WordSearch Engine Agent
-4.1 Role
+4. WordSearch Engine Agent:
+4.1 Role:
 
 Perform precise directional scanning of the grid.
 
-4.2 Responsibilities
+4.2 Responsibilities:
 
 Accept grid and word list
 
@@ -227,19 +227,19 @@ Return coordinates
 
 Identify word direction
 
-4.3 Capabilities
+4.3 Capabilities:
 
-✔ Deterministic search logic
-✔ Precise coordinate detection
-✘ Cannot fetch images
-✘ Cannot generate HTML
+Deterministic search logic
+Precise coordinate detection
+Cannot fetch images
+Cannot generate HTML
 
-5. HTML Generator Agent
-5.1 Role
+5. HTML Generator Agent:
+5.1 Role:
 
 Convert grid and coordinates into styled HTML output.
 
-5.2 Responsibilities
+5.2 Responsibilities:
 
 Create HTML table
 
