@@ -196,3 +196,6 @@ The system follows a **multi-agent pipeline** where each agent has a single, wel
 | Apply `.found` CSS class | ✅ Highlights solved letters |
 | Highlight solved letters | |
 | Generate CSS styles | |
+
+<img width="1339" height="816" alt="Image" src="https://github.com/user-attachments/assets/78ff24e7-3980-477c-83ac-59e5ef7b1a6f" />
+
