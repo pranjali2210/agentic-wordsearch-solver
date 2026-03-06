@@ -1,250 +1,198 @@
-User–System Interaction Document:
-1. Overview
+# Agentic AI WordSearch Solver
 
-This document describes how users interact with the Agentic AI WordSearch Solver system.
-It defines expected behavior, happy paths, and edge cases before implementation.
+A multi-agent system for solving word search puzzles from images — returning highlighted HTML visualizations and structured JSON output.
 
-1.1 System Inputs
+---
 
-The system accepts:
+## Table of Contents
 
-Image URL of a word search puzzle
-OR
+- [Overview](#overview)
+- [System I/O](#system-io)
+- [User Personas](#user-personas)
+- [Happy Path Workflows](#happy-path-workflows)
+- [Agent Architecture](#agent-architecture)
 
-Base64 encoded image
+---
 
-Additionally, the user must provide:
+## Overview
 
-List of target words
+The WordSearch Solver accepts an image of a word search puzzle along with a list of target words, then uses a pipeline of specialized agents to extract the grid, locate each word, and return a visual solution.
 
-1.2 System Outputs
+---
 
-The system returns:
+## System I/O
 
-Word coordinates in the grid
+### Inputs
 
-Highlighted HTML visualization of the solved puzzle
+| Type | Description |
+|------|-------------|
+| `image_url` | Publicly accessible URL of the puzzle image |
+| `base64_image` | Base64-encoded puzzle image |
+| `word_list` | List of words to locate in the puzzle |
 
-Structured JSON output
+### Outputs
 
-2. User Personas:
-2.1 Persona 1 – AI/ML Student (Primary User)
+| Type | Description |
+|------|-------------|
+| `coordinates` | Grid positions for each found word |
+| `html_visualization` | Highlighted HTML table of the solved puzzle |
+| `json_output` | Structured JSON with word positions and directions |
 
-Background: Computer Engineering / AI student
-Experience: Familiar with Langflow and LLMs
-Goal: Solve word search puzzles programmatically
-Access Level: Can provide image URLs or Base64 image data
+---
 
-2.2 Persona 2 – Puzzle Enthusiast (Secondary User)
+## User Personas
 
-Background: Non-technical
-Experience: Basic web interface usage
-Goal: Upload puzzle image and get highlighted solution
-Access Level: Only image upload and word list input
+### 🎓 Persona 1 — AI/ML Student *(Primary)*
 
-2.3 Persona 3 – Developer / Maintainer
+| Field | Detail |
+|-------|--------|
+| Background | Computer Engineering / AI student |
+| Experience | Familiar with Langflow and LLMs |
+| Goal | Solve word search puzzles programmatically |
+| Access | Image URLs or Base64 image data |
 
-Background: AI Engineer
-Experience: Langflow and Groq API
-Goal: Extend, debug, or optimize the system
-Access Level: Full system modification
+### 🧩 Persona 2 — Puzzle Enthusiast *(Secondary)*
 
-3. Happy Path Workflows:
-3.1 Happy Path 1 – Image via URL
-Scenario
+| Field | Detail |
+|-------|--------|
+| Background | Non-technical |
+| Experience | Basic web interface usage |
+| Goal | Upload puzzle image and get highlighted solution |
+| Access | Image upload and word list input only |
 
-User provides a public image URL and a word list.
+### 🛠️ Persona 3 — Developer / Maintainer
 
-User Request
+| Field | Detail |
+|-------|--------|
+| Background | AI Engineer |
+| Experience | Langflow and Groq API |
+| Goal | Extend, debug, or optimize the system |
+| Access | Full system modification |
 
-"I want to solve this puzzle."
+---
 
-Input Provided
+## Happy Path Workflows
 
-Image URL
+### Path 1 — Image via URL
 
-Words: thor, hulk, hawkeye, black widow
+**User provides** a public image URL and a word list.
 
-3.2 System Execution Flow:
-Thinking Step 1 – Input Validation
+> *"I want to solve this puzzle."*
 
-Validate URL format
+**Example input:**
+```
+Image URL: https://example.com/puzzle.png
+Words:     thor, hulk, hawkeye, black widow
+```
 
-Check accessibility of the image
+**Execution flow:**
 
-Action 1
+```
+Step 1 — Input Validation
+  ├── Validate URL format
+  └── Check image accessibility
 
-Fetch image from URL
+Step 2 — Image Processing
+  ├── Fetch image from URL
+  ├── Convert to Base64
+  └── Pass to Grid Extraction Agent
 
-Thinking Step 2 – Image Processing
+Step 3 — Grid Validation
+  ├── Extract letter grid
+  └── Convert to validated 2D array
 
-Convert image to Base64
+Step 4 — Word Search
+  ├── Scan grid in 8 directions
+  └── Record coordinates per word
 
-Pass image to Grid Extraction Agent
+Step 5 — Output Generation
+  ├── Build HTML table with highlights
+  └── Return JSON + HTML to user
+```
 
-Action 2
-
-Extract letter grid from image
-
-Convert grid to 2D array
-
-Thinking Step 3 – Grid Validation
-
-Validate grid structure
-
-Ensure it is a proper 2D list
-
-Action 3
-
-Send:
-
-Grid
-
-Word list
-
-to WordSearch Engine
-
-Thinking Step 4 – Word Search
-
-Perform deterministic grid scanning
-
-Detect word coordinates
-
-Store positions
-
-Action 4 – Structured Output
-
-Example:
-
+**Example JSON output:**
+```json
 {
   "word": "thor",
   "positions": [[0,0], [0,1], [0,2], [0,3]],
   "direction": "horizontal"
 }
-Action 5 – HTML Generation
+```
 
-Generate HTML table
+**Final response includes:**
+- ✅ Highlighted HTML grid
+- ✅ JSON with word positions
 
-Apply .found CSS class
+---
 
-Highlight solved letters
+### Path 2 — Base64 Image Input
 
-Final Response to User
-"Here is your solved puzzle."
+**User provides** a Base64-encoded image directly.
 
-Returns:
+**Execution flow:**
 
-Highlighted HTML grid
+```
+1. Validate Base64 string
+2. Decode image
+3. Extract grid → run word search
+4. Generate HTML visualization
+5. Return solution
+```
 
-JSON with word positions
+---
 
-3.3 Happy Path 2 – Base64 Image Input
-User Input
+## Agent Architecture
 
-User uploads Base64 encoded image
+The system follows a **multi-agent pipeline** where each agent has a single, well-defined responsibility. Agents communicate sequentially and never perform tasks outside their scope.
 
-System Flow
+---
 
-Validate Base64
+### 🖼️ Image Processing Agent
 
-Decode image
+**Role:** Convert image input into a processable format.
 
-Extract grid
+| Responsibilities | Capabilities |
+|-----------------|--------------|
+| Fetch image from URL | ✅ Read images |
+| Validate Base64 input | ❌ Cannot perform word search |
+| Convert to standardized format | ❌ Cannot generate HTML |
+| Return image bytes | |
 
-Run word search
+---
 
-Generate HTML visualization
+### 🔡 Grid Extraction Agent
 
-Return solution
+**Role:** Extract and validate the 2D letter grid from the image.
 
-Agent Specification Document
-1. System Overview:
+| Responsibilities | Capabilities |
+|-----------------|--------------|
+| Convert image to text grid | ✅ Returns validated 2D list |
+| Format grid as 2D list | ❌ Cannot modify word list |
+| Validate grid dimensions | ❌ Cannot generate HTML |
+| Ensure characters only | |
 
-The WordSearch Solver follows a multi-agent architecture.
+---
 
-Key principles:
+### 🔎 WordSearch Engine Agent
 
-Each agent has one clear responsibility
+**Role:** Perform precise directional scanning of the grid.
 
-Agents communicate sequentially
+| Responsibilities | Capabilities |
+|-----------------|--------------|
+| Accept grid and word list | ✅ Deterministic search logic |
+| Search in 8 directions | ✅ Precise coordinate detection |
+| Return coordinates per word | ❌ Cannot fetch images |
+| Identify word direction | ❌ Cannot generate HTML |
 
-No agent performs unrelated tasks
+---
 
-2. Image Processing Agent:
-2.1 Role:
+### 🎨 HTML Generator Agent
 
-Convert image input into a processable format.
+**Role:** Convert grid and coordinates into styled HTML output.
 
-2.2 Responsibilities:
-
-Fetch image from URL
-
-Validate Base64 input
-
-Convert image into standardized format
-
-Return image bytes
-
-2.3 Capabilities:
-
-Can read images
-Cannot perform word search
-Cannot generate HTML
-
-3. Grid Extraction Agent:
-3.1 Role:
-
-Extract and validate the 2D letter grid.
-
-3.2 Responsibilities:
-
-Convert image to text grid
-
-Format grid as 2D list
-
-Validate grid dimensions
-
-Ensure characters only
-
-3.3 Capabilities:
-
-Returns validated 2D list
-Cannot modify word list
-Cannot generate HTML
-
-4. WordSearch Engine Agent:
-4.1 Role:
-
-Perform precise directional scanning of the grid.
-
-4.2 Responsibilities:
-
-Accept grid and word list
-
-Search in 8 directions
-
-Return coordinates
-
-Identify word direction
-
-4.3 Capabilities:
-
-Deterministic search logic
-Precise coordinate detection
-Cannot fetch images
-Cannot generate HTML
-
-5. HTML Generator Agent:
-5.1 Role:
-
-Convert grid and coordinates into styled HTML output.
-
-5.2 Responsibilities:
-
-Create HTML table
-
-Apply .found class
-
-Highlight solved letters
-
-Generate CSS styles
+| Responsibilities | Capabilities |
+|-----------------|--------------|
+| Create HTML table | ✅ Generates styled output |
+| Apply `.found` CSS class | ✅ Highlights solved letters |
+| Highlight solved letters | |
+| Generate CSS styles | |
